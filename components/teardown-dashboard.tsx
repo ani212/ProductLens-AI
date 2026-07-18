@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { TeardownReport } from '@/lib/mock-data';
+import { useAuth } from '@/context/auth-context';
 import {
   FileText,
   TrendingUp,
@@ -30,6 +31,7 @@ interface TeardownDashboardProps {
 type TabType = 'overview' | 'features' | 'journey' | 'pain-points' | 'opportunities' | 'sources';
 
 export default function TeardownDashboard({ report, isMock, onBack, onChangePersona }: TeardownDashboardProps) {
+  const { user, sheetsConnected } = useAuth();
   const [activeTab, setActiveTab] = useState<TabType>('overview');
   const [selectedProductSwot, setSelectedProductSwot] = useState<string>(report.products[0]?.id || '');
   const [isSaved, setIsSaved] = useState(false);
@@ -162,16 +164,49 @@ export default function TeardownDashboard({ report, isMock, onBack, onChangePers
     }));
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     try {
       const saved = localStorage.getItem('productlens_saved_reports');
       const list = saved ? JSON.parse(saved) : [];
+      
+      const reportId = report.products.map(p => p.name).join(' vs ');
       
       if (!list.some((r: any) => r.timestamp === report.timestamp && r.products.map((p: any) => p.name).join() === report.products.map((p: any) => p.name).join())) {
         list.push(report);
         localStorage.setItem('productlens_saved_reports', JSON.stringify(list));
       }
+
+      // Save to local favorites array (offline backup)
+      const favs = localStorage.getItem('productlens_favorites') || '[]';
+      const favList = JSON.parse(favs);
+      const isAlreadyFav = favList.some((f: any) => f.products === reportId);
+      
+      if (!isAlreadyFav) {
+        favList.push({
+          products: reportId,
+          persona: report.persona,
+          objective: report.objective,
+          timestamp: report.timestamp
+        });
+        localStorage.setItem('productlens_favorites', JSON.stringify(favList));
+      }
+      
       setIsSaved(true);
+
+      if (user && sheetsConnected) {
+        await fetch('/api/sync', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'toggleFavorite',
+            userId: user.userId,
+            products: reportId,
+            persona: report.persona,
+            objective: report.objective,
+            isFavorite: true
+          })
+        });
+      }
     } catch (e) {
       console.error(e);
     }

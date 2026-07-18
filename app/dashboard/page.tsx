@@ -6,9 +6,12 @@ import ResearchLoader from '@/components/research-loader';
 import TeardownDashboard from '@/components/teardown-dashboard';
 import { TeardownReport, getTeardownData } from '@/lib/mock-data';
 
+import { useAuth } from '@/context/auth-context';
+
 function DashboardContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { user, loading: authLoading, sheetsConnected } = useAuth();
 
   const products = searchParams.get('products') || '';
   const persona = searchParams.get('persona') || 'Startup Product Teams';
@@ -18,6 +21,46 @@ function DashboardContent() {
   const [loading, setLoading] = useState(true);
   const [report, setReport] = useState<TeardownReport | null>(null);
   const [isMock, setIsMock] = useState(false);
+
+  useEffect(() => {
+    if (!authLoading && !user) {
+      router.push('/login');
+    }
+  }, [user, authLoading, router]);
+
+  const logSearchHistory = async (reportData: TeardownReport) => {
+    if (!user) return;
+    const productsStr = reportData.products.map(p => p.name).join(', ');
+    
+    try {
+      const saved = localStorage.getItem('productlens_saved_reports') || '[]';
+      const list = JSON.parse(saved);
+      if (!list.some((r: any) => r.timestamp === reportData.timestamp && r.products.map((p: any) => p.name).join() === reportData.products.map((p: any) => p.name).join())) {
+        list.push(reportData);
+        localStorage.setItem('productlens_saved_reports', JSON.stringify(list));
+      }
+    } catch (e) {
+      console.error('Failed to save to local cache:', e);
+    }
+
+    if (sheetsConnected) {
+      try {
+        await fetch('/api/sync', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'addHistory',
+            userId: user.userId,
+            products: productsStr,
+            persona: reportData.persona,
+            objective: reportData.objective
+          })
+        });
+      } catch (err) {
+        console.error('Failed to sync search history to Sheets:', err);
+      }
+    }
+  };
 
   useEffect(() => {
     if (!products) {
@@ -46,6 +89,7 @@ function DashboardContent() {
           if (data.report) {
             setReport(data.report);
             setIsMock(data.isMock);
+            logSearchHistory(data.report);
           } else {
             throw new Error(data.error || 'Failed to fetch report');
           }
@@ -53,16 +97,16 @@ function DashboardContent() {
         }
       } catch (err) {
         console.warn('API fetch failed, falling back to local client-side generator. Error:', err);
-        // Client-side fallback with simulated delays for agent visual experience
         if (isSubscribed) {
           setTimeout(() => {
             if (isSubscribed) {
               const localReport = getTeardownData(products, objective, persona);
               setReport(localReport);
               setIsMock(true);
+              logSearchHistory(localReport);
               setLoading(false);
             }
-          }, 7200); // 7.2 seconds gives the loader animation time to display all agents
+          }, 7200);
         }
       }
     }

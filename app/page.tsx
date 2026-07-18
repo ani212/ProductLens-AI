@@ -1,14 +1,22 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import LandingPage from '@/components/landing-page';
 import ProductResolver from '@/components/product-resolver';
 import { ProductInfo } from '@/lib/mock-data';
+import { useAuth } from '@/context/auth-context';
 
 export default function Home() {
   const router = useRouter();
-  
+  const { user, loading } = useAuth();
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push('/login');
+    }
+  }, [user, loading, router]);
+
   const [showResolver, setShowResolver] = useState(false);
   const [productsInput, setProductsInput] = useState('');
   const [persona, setPersona] = useState('Startup Product Teams');
@@ -17,6 +25,14 @@ export default function Home() {
   
   const [resolvedProducts, setResolvedProducts] = useState<ProductInfo[]>([]);
   const [resolutionLoading, setResolutionLoading] = useState(false);
+
+  if (loading || !user) {
+    return (
+      <div className="min-h-[70vh] flex items-center justify-center">
+        <div className="w-6 h-6 border-2 border-purple-550 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
 
   // Landing page form submission
   const handleStartAnalysis = async (config: {
