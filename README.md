@@ -4,6 +4,8 @@ An AI-powered competitive product intelligence platform that turns any software 
 
 Developed for Product Managers, strategy teams, and aspiring builders.
 
+### 🔗 Live Demo: [https://productlens-ai-26ie.onrender.com](https://productlens-ai-26ie.onrender.com)
+
 ---
 
 ## 🎨 Design Aesthetic: Futuristic Minimal, Clean, Light
