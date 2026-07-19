@@ -1,50 +1,34 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import LandingPage from '@/components/landing-page';
 import ProductResolver from '@/components/product-resolver';
 import { ProductInfo } from '@/lib/mock-data';
-import { useAuth } from '@/context/auth-context';
 
 export default function Home() {
   const router = useRouter();
-  const { user, loading } = useAuth();
-
-  useEffect(() => {
-    if (!loading && !user) {
-      router.push('/login');
-    }
-  }, [user, loading, router]);
 
   const [showResolver, setShowResolver] = useState(false);
   const [productsInput, setProductsInput] = useState('');
-  const [persona, setPersona] = useState('Startup Product Teams');
+  const [persona, setPersona] = useState('Product Managers');
   const [objective, setObjective] = useState('');
-  const [depth, setDepth] = useState<'quick' | 'deep'>('deep');
+  const [industry, setIndustry] = useState('B2B SaaS');
   
   const [resolvedProducts, setResolvedProducts] = useState<ProductInfo[]>([]);
   const [resolutionLoading, setResolutionLoading] = useState(false);
-
-  if (loading || !user) {
-    return (
-      <div className="min-h-[70vh] flex items-center justify-center">
-        <div className="w-6 h-6 border-2 border-purple-550 border-t-transparent rounded-full animate-spin"></div>
-      </div>
-    );
-  }
 
   // Landing page form submission
   const handleStartAnalysis = async (config: {
     productsInput: string;
     persona: string;
     objective: string;
-    depth: 'quick' | 'deep';
+    industry: string;
   }) => {
     setProductsInput(config.productsInput);
     setPersona(config.persona);
     setObjective(config.objective);
-    setDepth(config.depth);
+    setIndustry(config.industry);
     setShowResolver(true);
     setResolutionLoading(true);
 
@@ -86,15 +70,14 @@ export default function Home() {
       products: productsInput,
       persona,
       objective,
-      depth
+      industry
     }).toString();
     
     router.push(`/dashboard?${query}`);
   };
 
   const handleViewSample = () => {
-    // Redirect directly to dashboard loaded with the pre-baked Notion, ClickUp, Asana comparison
-    router.push('/dashboard?products=Notion,ClickUp,Asana&persona=Startup%20Product%20Teams&objective=Startup%20work%20coordination%25%20assessment&depth=deep');
+    router.push('/dashboard?products=Notion,ClickUp,Asana&persona=Startup%20Product%20Teams&objective=Startup%20work%20coordination%20assessment&depth=deep');
   };
 
   return (

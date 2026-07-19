@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useAuth } from '@/context/auth-context';
 import { FileText, Trash2, Calendar, User, ArrowRight, Star, History } from 'lucide-react';
 
 interface SavedReportsProps {
@@ -17,125 +16,77 @@ interface LogEntry {
 }
 
 export default function SavedReports({ onSelectReport, onClose }: SavedReportsProps) {
-  const { user, sheetsConnected } = useAuth();
-  
   const [activeTab, setActiveTab] = useState<'history' | 'favorites'>('history');
   const [history, setHistory] = useState<LogEntry[]>([]);
   const [favorites, setFavorites] = useState<LogEntry[]>([]);
   const [loadingArchive, setLoadingArchive] = useState(true);
 
   useEffect(() => {
-    if (!user) return;
-
-    const loadData = async () => {
+    const loadData = () => {
       setLoadingArchive(true);
-      if (sheetsConnected) {
-        try {
-          const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || '';
-          const res = await fetch(`${backendUrl}/api/sync?userId=${user.userId}`);
-          const data = await res.json();
-          if (data.history) setHistory(data.history);
-          if (data.favorites) setFavorites(data.favorites);
-        } catch (e) {
-          console.error('Failed to fetch from Sheets:', e);
-        }
-      } else {
-        // Fallback local storage
-        try {
-          const savedReports = localStorage.getItem('productlens_saved_reports') || '[]';
-          const reportsList = JSON.parse(savedReports);
-          
-          const hist = reportsList.map((r: any) => ({
-            products: r.products.map((p: any) => p.name).join(', '),
-            persona: r.persona,
-            objective: r.objective,
-            timestamp: r.timestamp
-          }));
-          setHistory(hist);
+      try {
+        const savedReports = localStorage.getItem('productlens_saved_reports') || '[]';
+        const reportsList = JSON.parse(savedReports);
+        
+        const hist = reportsList.map((r: any) => ({
+          products: r.products.map((p: any) => p.name).join(', '),
+          persona: r.persona,
+          objective: r.objective,
+          timestamp: r.timestamp
+        }));
+        setHistory(hist);
 
-          const favs = localStorage.getItem('productlens_favorites') || '[]';
-          setFavorites(JSON.parse(favs));
-        } catch (err) {
-          console.error('Failed to load local archive:', err);
-        }
+        const favs = localStorage.getItem('productlens_favorites') || '[]';
+        setFavorites(JSON.parse(favs));
+      } catch (err) {
+        console.error('Failed to load local archive:', err);
       }
       setLoadingArchive(false);
     };
 
     loadData();
-  }, [user, sheetsConnected]);
+  }, []);
 
-  const handleDeleteHistory = async (index: number, e: React.MouseEvent) => {
+  const handleDeleteHistory = (index: number, e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!user) return;
-
     const entry = history[index];
     const updated = [...history];
     updated.splice(index, 1);
     setHistory(updated);
 
-    if (!sheetsConnected) {
-      // Local storage delete
-      try {
-        const savedReports = localStorage.getItem('productlens_saved_reports') || '[]';
-        const reportsList = JSON.parse(savedReports);
-        // Find index that matches
-        const localIdx = reportsList.findIndex((r: any) => 
-          r.products.map((p: any) => p.name).join(', ') === entry.products &&
-          r.timestamp === entry.timestamp
-        );
-        if (localIdx !== -1) {
-          reportsList.splice(localIdx, 1);
-          localStorage.setItem('productlens_saved_reports', JSON.stringify(reportsList));
-        }
-      } catch (err) {
-        console.error(err);
+    try {
+      const savedReports = localStorage.getItem('productlens_saved_reports') || '[]';
+      const reportsList = JSON.parse(savedReports);
+      const localIdx = reportsList.findIndex((r: any) => 
+        r.products.map((p: any) => p.name).join(', ') === entry.products &&
+        r.timestamp === entry.timestamp
+      );
+      if (localIdx !== -1) {
+        reportsList.splice(localIdx, 1);
+        localStorage.setItem('productlens_saved_reports', JSON.stringify(reportsList));
       }
+    } catch (err) {
+      console.error(err);
     }
   };
 
-  const handleRemoveFavorite = async (index: number, e: React.MouseEvent) => {
+  const handleRemoveFavorite = (index: number, e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!user) return;
-
     const entry = favorites[index];
     const updated = [...favorites];
     updated.splice(index, 1);
     setFavorites(updated);
 
-    if (sheetsConnected) {
-      // Sync remove with Google Sheets
-      try {
-        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || '';
-        await fetch(`${backendUrl}/api/sync`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            action: 'toggleFavorite',
-            userId: user.userId,
-            products: entry.products,
-            persona: entry.persona,
-            objective: entry.objective,
-            isFavorite: false
-          })
-        });
-      } catch (err) {
-        console.error(err);
-      }
-    } else {
-      // Local storage remove
-      try {
-        const localFavs = JSON.parse(localStorage.getItem('productlens_favorites') || '[]');
-        const updatedFavs = localFavs.filter((f: any) => f.products !== entry.products);
-        localStorage.setItem('productlens_favorites', JSON.stringify(updatedFavs));
-      } catch (err) {
-        console.error(err);
-      }
+    try {
+      const localFavs = JSON.parse(localStorage.getItem('productlens_favorites') || '[]');
+      const updatedFavs = localFavs.filter((f: any) => f.products !== entry.products);
+      localStorage.setItem('productlens_favorites', JSON.stringify(updatedFavs));
+    } catch (err) {
+      console.error(err);
     }
   };
 
   const handleSelectEntry = (entry: LogEntry) => {
-    // Return standard format expected by parent
     onSelectReport({
       products: entry.products.split(',').map(p => ({ name: p.trim() })),
       persona: entry.persona,
@@ -153,13 +104,11 @@ export default function SavedReports({ onSelectReport, onClose }: SavedReportsPr
       <div className="flex justify-between items-center border-b border-zinc-200/80 pb-4">
         <div>
           <h2 className="text-xl font-bold tracking-tight text-zinc-950 flex items-center gap-2">
-            <FileText size={18} className="text-purple-650" />
-            Competitive Intelligence Archive
+            <FileText size={18} className="text-indigo-500" />
+            Report Library
           </h2>
-          <p className="text-sm text-zinc-750 font-normal mt-0.5">
-            {sheetsConnected 
-              ? 'Synchronized with your connected Google Sheet database.' 
-              : 'Running in local sandbox mode. Connect a Google Sheet in settings to back up data.'}
+          <p className="text-sm text-zinc-500 font-normal mt-0.5">
+            Your saved competitive intelligence reports.
           </p>
         </div>
         <button
@@ -170,7 +119,7 @@ export default function SavedReports({ onSelectReport, onClose }: SavedReportsPr
         </button>
       </div>
 
-      {/* Tabs list (History vs Favorites) */}
+      {/* Tabs */}
       <div className="flex gap-2 border-b border-zinc-200 pb-1">
         <button
           onClick={() => setActiveTab('history')}
@@ -196,21 +145,21 @@ export default function SavedReports({ onSelectReport, onClose }: SavedReportsPr
         </button>
       </div>
 
-      {/* List viewport */}
+      {/* List */}
       {loadingArchive ? (
-        <div className="glass-light p-12 rounded-2xl border border-zinc-200/60 shadow-sm text-center bg-white/60 flex flex-col justify-center items-center">
-          <div className="w-5 h-5 border-2 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
-          <span className="text-xs text-zinc-500 mt-3">Loading archive database...</span>
+        <div className="bg-white p-12 rounded-2xl border border-zinc-200 shadow-sm text-center flex flex-col justify-center items-center">
+          <div className="w-5 h-5 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+          <span className="text-xs text-zinc-500 mt-3">Loading archive...</span>
         </div>
       ) : activeList.length === 0 ? (
-        <div className="glass-light p-12 rounded-2xl border border-zinc-200/60 shadow-sm text-center space-y-3 bg-white/60">
+        <div className="bg-white p-12 rounded-2xl border border-zinc-200 shadow-sm text-center space-y-3">
           <FileText size={32} className="text-zinc-300 mx-auto" />
-          <h3 className="text-sm font-semibold text-zinc-850">
+          <h3 className="text-sm font-semibold text-zinc-800">
             {activeTab === 'history' ? 'No Search History' : 'No Starred Favorites'}
           </h3>
-          <p className="text-sm text-zinc-750 max-w-xs mx-auto font-normal leading-relaxed">
+          <p className="text-sm text-zinc-500 max-w-xs mx-auto font-normal leading-relaxed">
             {activeTab === 'history' 
-              ? 'Generate a teardown report first to log your competitive research searches here.' 
+              ? 'Generate a report first to log your competitive research searches here.' 
               : 'Star reports inside the dashboard view to display them in your quick favorites list.'}
           </p>
         </div>
@@ -220,11 +169,11 @@ export default function SavedReports({ onSelectReport, onClose }: SavedReportsPr
             <div
               key={idx}
               onClick={() => handleSelectEntry(entry)}
-              className="glass-light p-5 rounded-2xl border border-zinc-250/60 bg-white/70 hover:border-zinc-450 transition cursor-pointer flex flex-col justify-between h-[155px] group shadow-sm"
+              className="bg-white p-5 rounded-2xl border border-zinc-200 hover:border-zinc-400 transition cursor-pointer flex flex-col justify-between h-[155px] group shadow-sm"
             >
               <div>
                 <div className="flex justify-between items-start">
-                  <h3 className="text-sm font-bold text-zinc-900 group-hover:text-purple-650 transition truncate pr-4">
+                  <h3 className="text-sm font-bold text-zinc-900 group-hover:text-indigo-600 transition truncate pr-4">
                     {entry.products}
                   </h3>
                   <button
@@ -242,7 +191,7 @@ export default function SavedReports({ onSelectReport, onClose }: SavedReportsPr
                   </button>
                 </div>
 
-                <p className="text-sm text-zinc-750 font-normal mt-1 truncate">
+                <p className="text-sm text-zinc-500 font-normal mt-1 truncate">
                   Goal: <span className="text-zinc-600 font-normal">{entry.objective || 'General capability assessment'}</span>
                 </p>
                 
@@ -251,7 +200,6 @@ export default function SavedReports({ onSelectReport, onClose }: SavedReportsPr
                 </p>
               </div>
 
-              {/* Bottom detail meta */}
               <div className="flex justify-between items-center text-xs text-zinc-500 pt-3 border-t border-zinc-100 font-normal">
                 <div className="flex items-center gap-3">
                   <span className="flex items-center gap-1">
@@ -263,7 +211,7 @@ export default function SavedReports({ onSelectReport, onClose }: SavedReportsPr
                     {entry.persona.split(' ')[0]}
                   </span>
                 </div>
-                <span className="flex items-center gap-0.5 text-purple-650 group-hover:translate-x-0.5 transition font-semibold">
+                <span className="flex items-center gap-0.5 text-indigo-600 group-hover:translate-x-0.5 transition font-semibold">
                   Open Scan
                   <ArrowRight size={11} />
                 </span>

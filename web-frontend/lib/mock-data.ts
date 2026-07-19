@@ -1,14 +1,5 @@
-export interface ProductInfo {
-  id: string;
-  name: string;
-  website: string;
-  logoText: string;
-  logoBg: string;
-  companyName: string;
-  category: string;
-  description: string;
-}
-
+import { ProductInfo } from './types';
+export type { ProductInfo };
 export interface TeardownReport {
   products: ProductInfo[];
   timestamp: string;
