@@ -116,15 +116,16 @@ function DashboardContent() {
             const line = lines[i];
             if (!line.trim()) continue;
 
-            // Simple SSE parser
-            const eventMatch = line.match(/event:\s*(.+)/);
-            const dataMatch = line.match(/data:\s*(.+)/);
-            
-            if (eventMatch && dataMatch) {
-              const eventType = eventMatch[1].trim();
-              
+            const eventIdx = line.indexOf('event:');
+            const dataIdx = line.indexOf('data:');
+
+            if (eventIdx !== -1 && dataIdx !== -1) {
+              const eventStr = line.substring(eventIdx + 6, dataIdx).trim();
+              const dataStr = line.substring(dataIdx + 5).trim();
+
               try {
-                const data = JSON.parse(dataMatch[1]);
+                const data = JSON.parse(dataStr);
+                const eventType = eventStr;
                 
                 if (eventType === 'progress') {
                   const prog: PipelineProgress = data;
@@ -146,7 +147,7 @@ function DashboardContent() {
                   throw new Error(data.message || 'Pipeline emitted an error event.');
                 }
               } catch (parseErr) {
-                console.error('Error parsing SSE data:', parseErr, dataMatch[1]);
+                console.error('Error parsing SSE data:', parseErr, dataStr);
               }
             }
           }

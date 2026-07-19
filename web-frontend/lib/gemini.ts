@@ -14,27 +14,38 @@ const GEMINI_KEY = process.env.GEMINI_API_KEY || '';
 export async function callGroq(prompt: string, jsonMode = false): Promise<string> {
   if (!GROQ_KEY) throw new Error('Missing GROQ_API_KEY');
 
-  const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${GROQ_KEY}`,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      model: 'llama-3.1-70b-versatile',
-      messages: [{ role: 'user', content: prompt }],
-      temperature: 0.2, // Low temp for analytical consistency
-      response_format: jsonMode ? { type: 'json_object' } : { type: 'text' }
-    })
-  });
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 60000); // 60s timeout
 
-  if (!res.ok) {
-    const errorText = await res.text();
-    throw new Error(`Groq API Error: ${res.status} ${errorText}`);
+  try {
+    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${GROQ_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      signal: controller.signal,
+      body: JSON.stringify({
+        model: 'llama-3.1-70b-versatile',
+        messages: [{ role: 'user', content: prompt }],
+        temperature: 0.2, // Low temp for analytical consistency
+        response_format: jsonMode ? { type: 'json_object' } : { type: 'text' }
+      })
+    });
+
+    clearTimeout(timeoutId);
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      throw new Error(`Groq API Error: ${res.status} ${errorText}`);
+    }
+
+    const data = await res.json();
+    return data.choices[0].message.content;
+  } catch (error) {
+    clearTimeout(timeoutId);
+    throw error;
   }
-
-  const data = await res.json();
-  return data.choices[0].message.content;
 }
 
 /**
@@ -45,25 +56,36 @@ export async function callGemini(prompt: string, jsonMode = false): Promise<stri
 
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`;
   
-  const res = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      contents: [{ parts: [{ text: prompt }] }],
-      generationConfig: {
-        temperature: 0.2,
-        responseMimeType: jsonMode ? "application/json" : "text/plain",
-      }
-    })
-  });
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 60000); // 60s timeout
 
-  if (!res.ok) {
-    const errorText = await res.text();
-    throw new Error(`Gemini API Error: ${res.status} ${errorText}`);
+  try {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      signal: controller.signal,
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: {
+          temperature: 0.2,
+          responseMimeType: jsonMode ? "application/json" : "text/plain",
+        }
+      })
+    });
+
+    clearTimeout(timeoutId);
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      throw new Error(`Gemini API Error: ${res.status} ${errorText}`);
+    }
+
+    const data = await res.json();
+    return data.candidates[0].content.parts[0].text;
+  } catch (error) {
+    clearTimeout(timeoutId);
+    throw error;
   }
-
-  const data = await res.json();
-  return data.candidates[0].content.parts[0].text;
 }
 
 /**
