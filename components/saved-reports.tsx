@@ -31,7 +31,8 @@ export default function SavedReports({ onSelectReport, onClose }: SavedReportsPr
       setLoadingArchive(true);
       if (sheetsConnected) {
         try {
-          const res = await fetch(`/api/sync?userId=${user.userId}`);
+          const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || '';
+          const res = await fetch(`${backendUrl}/api/sync?userId=${user.userId}`);
           const data = await res.json();
           if (data.history) setHistory(data.history);
           if (data.favorites) setFavorites(data.favorites);
@@ -105,7 +106,8 @@ export default function SavedReports({ onSelectReport, onClose }: SavedReportsPr
     if (sheetsConnected) {
       // Sync remove with Google Sheets
       try {
-        await fetch('/api/sync', {
+        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || '';
+        await fetch(`${backendUrl}/api/sync`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

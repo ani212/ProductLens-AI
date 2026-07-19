@@ -52,7 +52,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const checkSheetsConfig = async () => {
     try {
-      const res = await fetch('/api/auth?check=config');
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || '';
+      const res = await fetch(`${backendUrl}/api/auth?check=config`);
       const data = await res.json();
       setSheetsConnected(!!data.sheetsConnected);
     } catch (err) {
@@ -67,7 +68,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const passwordHash = await hashPassword(password);
       
-      const res = await fetch('/api/auth', {
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || '';
+      const res = await fetch(`${backendUrl}/api/auth`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -101,7 +103,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const passwordHash = await hashPassword(password);
 
-      const res = await fetch('/api/auth', {
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || '';
+      const res = await fetch(`${backendUrl}/api/auth`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

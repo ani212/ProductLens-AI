@@ -194,7 +194,8 @@ export default function TeardownDashboard({ report, isMock, onBack, onChangePers
       setIsSaved(true);
 
       if (user && sheetsConnected) {
-        await fetch('/api/sync', {
+        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || '';
+        await fetch(`${backendUrl}/api/sync`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

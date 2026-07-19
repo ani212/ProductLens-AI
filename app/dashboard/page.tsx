@@ -45,7 +45,8 @@ function DashboardContent() {
 
     if (sheetsConnected) {
       try {
-        await fetch('/api/sync', {
+        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || '';
+        await fetch(`${backendUrl}/api/sync`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -73,7 +74,8 @@ function DashboardContent() {
     async function generateTeardown() {
       setLoading(true);
       try {
-        const res = await fetch('/api/teardown', {
+        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || '';
+        const res = await fetch(`${backendUrl}/api/teardown`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

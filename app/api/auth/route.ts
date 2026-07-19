@@ -5,6 +5,12 @@ import path from 'path';
 
 const USERS_FILE = path.join(process.cwd(), 'users.json');
 
+const CORS_HEADERS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, PUT, PATCH, DELETE',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With',
+};
+
 function getLocalUsers(): any[] {
   if (!fs.existsSync(USERS_FILE)) {
     return [];
@@ -25,6 +31,13 @@ function saveLocalUsers(users: any[]) {
   }
 }
 
+export async function OPTIONS() {
+  return new Response(null, {
+    status: 204,
+    headers: CORS_HEADERS
+  });
+}
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const check = searchParams.get('check');
@@ -32,10 +45,10 @@ export async function GET(request: Request) {
   if (check === 'config') {
     return NextResponse.json({
       sheetsConnected: !!process.env.GOOGLE_SHEETS_WEBAPP_URL
-    });
+    }, { headers: CORS_HEADERS });
   }
 
-  return NextResponse.json({ error: 'Invalid query' }, { status: 400 });
+  return NextResponse.json({ error: 'Invalid query' }, { status: 400, headers: CORS_HEADERS });
 }
 
 export async function POST(request: Request) {
@@ -43,7 +56,7 @@ export async function POST(request: Request) {
     const { action, identifier, passwordHash } = await request.json();
 
     if (!identifier || !passwordHash) {
-      return NextResponse.json({ error: 'Missing credentials' }, { status: 400 });
+      return NextResponse.json({ error: 'Missing credentials' }, { status: 400, headers: CORS_HEADERS });
     }
 
     const hasSheets = !!process.env.GOOGLE_SHEETS_WEBAPP_URL;
@@ -52,14 +65,14 @@ export async function POST(request: Request) {
       if (hasSheets) {
         const result = await syncRegister(identifier, passwordHash);
         if (result.error) {
-          return NextResponse.json({ error: result.error }, { status: 400 });
+          return NextResponse.json({ error: result.error }, { status: 400, headers: CORS_HEADERS });
         }
-        return NextResponse.json(result);
+        return NextResponse.json(result, { headers: CORS_HEADERS });
       } else {
         // Fallback local file registration
         const users = getLocalUsers();
         if (users.some(u => u.identifier === identifier)) {
-          return NextResponse.json({ error: 'User identifier already registered' }, { status: 400 });
+          return NextResponse.json({ error: 'User identifier already registered' }, { status: 400, headers: CORS_HEADERS });
         }
         
         const userId = 'usr_' + Math.random().toString(36).substr(2, 9);
@@ -67,35 +80,35 @@ export async function POST(request: Request) {
         users.push(newUser);
         saveLocalUsers(users);
 
-        return NextResponse.json({ success: true, userId, identifier });
+        return NextResponse.json({ success: true, userId, identifier }, { headers: CORS_HEADERS });
       }
     } else if (action === 'login') {
       if (hasSheets) {
         const result = await syncLogin(identifier, passwordHash);
         if (result.error) {
-          return NextResponse.json({ error: result.error }, { status: 400 });
+          return NextResponse.json({ error: result.error }, { status: 400, headers: CORS_HEADERS });
         }
-        return NextResponse.json(result);
+        return NextResponse.json(result, { headers: CORS_HEADERS });
       } else {
         // Fallback local file login
         const users = getLocalUsers();
         const matched = users.find(u => u.identifier === identifier);
         
         if (!matched) {
-          return NextResponse.json({ error: 'User not found' }, { status: 400 });
+          return NextResponse.json({ error: 'User not found' }, { status: 400, headers: CORS_HEADERS });
         }
 
         if (matched.passwordHash !== passwordHash) {
-          return NextResponse.json({ error: 'Incorrect password' }, { status: 400 });
+          return NextResponse.json({ error: 'Incorrect password' }, { status: 400, headers: CORS_HEADERS });
         }
 
-        return NextResponse.json({ success: true, userId: matched.userId, identifier: matched.identifier });
+        return NextResponse.json({ success: true, userId: matched.userId, identifier: matched.identifier }, { headers: CORS_HEADERS });
       }
     }
 
-    return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
+    return NextResponse.json({ error: 'Invalid action' }, { status: 400, headers: CORS_HEADERS });
   } catch (error: any) {
     console.error('Auth API error:', error);
-    return NextResponse.json({ error: error.message || 'Authentication error' }, { status: 500 });
+    return NextResponse.json({ error: error.message || 'Authentication error' }, { status: 500, headers: CORS_HEADERS });
   }
 }
