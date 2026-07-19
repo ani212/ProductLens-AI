@@ -103,6 +103,7 @@ function DashboardContent() {
         const reader = response.body.getReader();
         const decoder = new TextDecoder();
         let buffer = '';
+        let completed = false;
 
         while (true) {
           const { done, value } = await reader.read();
@@ -140,6 +141,7 @@ function DashboardContent() {
                     setReport(data.report);
                     setIsMock(false); // Real pipeline succeeded
                     saveToLocalStorage(data.report);
+                    completed = true;
                   }
                   setLoading(false);
                 }
@@ -154,6 +156,12 @@ function DashboardContent() {
           
           // Keep the incomplete event in the buffer
           buffer = lines[lines.length - 1];
+        }
+
+        // If the stream closed but we never received 'complete'
+        // it means the server died or the connection dropped.
+        if (!completed) {
+          throw new Error('Stream closed unexpectedly before completion.');
         }
 
       } catch (err: any) {
