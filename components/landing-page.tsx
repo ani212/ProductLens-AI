@@ -55,7 +55,7 @@ export default function LandingPage({ onStartAnalysis, onViewSample }: LandingPa
               Get the complete teardown.
             </span>
           </h1>
-          <p className="max-w-2xl mx-auto text-sm sm:text-base text-zinc-500 font-light leading-relaxed">
+          <p className="max-w-2xl mx-auto text-sm sm:text-base text-zinc-500 font-normal leading-relaxed">
             Compare competitors, uncover customer frustrations, and identify strategic feature gaps. ProductLens resolves names, queries live search channels, and verifies claims with direct source citations.
           </p>
         </div>
@@ -79,14 +79,14 @@ export default function LandingPage({ onStartAnalysis, onViewSample }: LandingPa
                 onChange={(e) => setProductsInput(e.target.value)}
                 className="w-full px-4 py-3 bg-white/80 border border-zinc-200/80 rounded-xl text-zinc-950 placeholder-zinc-400 text-sm focus:outline-none focus:border-zinc-950 focus:ring-1 focus:ring-zinc-950 transition-all shadow-sm"
               />
-              <p className="text-[10px] text-zinc-400">
+              <p className="text-xs text-zinc-500">
                 Enter 1 to 3 products separated by commas (e.g., Spotify, Apple Music).
               </p>
             </div>
 
             {/* Presets */}
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider">Presets:</span>
+              <span className="text-xs font-bold text-zinc-500 uppercase tracking-wider">Presets:</span>
               <button
                 type="button"
                 onClick={() => handlePresetClick('Notion, ClickUp, Asana')}
@@ -114,7 +114,7 @@ export default function LandingPage({ onStartAnalysis, onViewSample }: LandingPa
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Persona */}
               <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-500">Target Persona</label>
+                <label className="text-xs font-bold uppercase tracking-wider text-zinc-500">Target Persona</label>
                 <select
                   value={persona}
                   onChange={(e) => setPersona(e.target.value)}
@@ -130,7 +130,7 @@ export default function LandingPage({ onStartAnalysis, onViewSample }: LandingPa
 
               {/* Depth */}
               <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-wider text-zinc-500">Analysis Depth</label>
+                <label className="text-xs font-bold uppercase tracking-wider text-zinc-500">Analysis Depth</label>
                 <div className="grid grid-cols-2 gap-1 bg-zinc-100 p-1 rounded-xl border border-zinc-200/40">
                   <button
                     type="button"
@@ -160,7 +160,7 @@ export default function LandingPage({ onStartAnalysis, onViewSample }: LandingPa
 
             {/* Objective */}
             <div className="space-y-2">
-              <label htmlFor="objective" className="text-[10px] font-bold uppercase tracking-wider text-zinc-500">
+              <label htmlFor="objective" className="text-xs font-bold uppercase tracking-wider text-zinc-500">
                 Optional Analysis Goal / Focus Area
               </label>
               <input
@@ -200,7 +200,7 @@ export default function LandingPage({ onStartAnalysis, onViewSample }: LandingPa
               <Layers size={14} />
             </div>
             <h4 className="text-xs font-bold uppercase tracking-wider text-zinc-900">Shared Taxonomy</h4>
-            <p className="text-[11px] text-zinc-500 font-light leading-relaxed">
+            <p className="text-xs text-zinc-500 font-normal leading-relaxed">
               Synthesizes naming conventions (e.g., normalizes &ldquo;Smart Tasks&rdquo; vs. &ldquo;AI teammate&rdquo;) into an objective feature grid.
             </p>
           </div>
@@ -210,7 +210,7 @@ export default function LandingPage({ onStartAnalysis, onViewSample }: LandingPa
               <CheckCircle2 size={14} />
             </div>
             <h4 className="text-xs font-bold uppercase tracking-wider text-zinc-900">Grounded Logic</h4>
-            <p className="text-[11px] text-zinc-500 font-light leading-relaxed">
+            <p className="text-xs text-zinc-500 font-normal leading-relaxed">
               Every PM claim is graded explicitly as Fact, User Review finding, AI Observation, or Hypothesis with backing URLs.
             </p>
           </div>
@@ -220,7 +220,7 @@ export default function LandingPage({ onStartAnalysis, onViewSample }: LandingPa
               <Zap size={14} />
             </div>
             <h4 className="text-xs font-bold uppercase tracking-wider text-zinc-900">Roadmap Opportunities</h4>
-            <p className="text-[11px] text-zinc-500 font-light leading-relaxed">
+            <p className="text-xs text-zinc-500 font-normal leading-relaxed">
               Plots feature recommendations onto an interactive quadrant map (Effort vs. Impact) with estimated metrics.
             </p>
           </div>

@@ -156,7 +156,7 @@ export default function SavedReports({ onSelectReport, onClose }: SavedReportsPr
             <FileText size={18} className="text-purple-650" />
             Competitive Intelligence Archive
           </h2>
-          <p className="text-xs text-zinc-450 font-light mt-0.5">
+          <p className="text-sm text-zinc-750 font-normal mt-0.5">
             {sheetsConnected 
               ? 'Synchronized with your connected Google Sheet database.' 
               : 'Running in local sandbox mode. Connect a Google Sheet in settings to back up data.'}
@@ -177,7 +177,7 @@ export default function SavedReports({ onSelectReport, onClose }: SavedReportsPr
           className={`flex items-center gap-1.5 px-4 py-2 text-xs font-bold border-b-2 transition ${
             activeTab === 'history'
               ? 'border-zinc-950 text-zinc-950'
-              : 'border-transparent text-zinc-400 hover:text-zinc-600'
+              : 'border-transparent text-zinc-500 hover:text-zinc-600'
           }`}
         >
           <History size={13} />
@@ -188,7 +188,7 @@ export default function SavedReports({ onSelectReport, onClose }: SavedReportsPr
           className={`flex items-center gap-1.5 px-4 py-2 text-xs font-bold border-b-2 transition ${
             activeTab === 'favorites'
               ? 'border-zinc-950 text-zinc-950'
-              : 'border-transparent text-zinc-400 hover:text-zinc-600'
+              : 'border-transparent text-zinc-500 hover:text-zinc-600'
           }`}
         >
           <Star size={13} className={favorites.length > 0 ? "fill-amber-400 text-amber-400" : ""} />
@@ -200,7 +200,7 @@ export default function SavedReports({ onSelectReport, onClose }: SavedReportsPr
       {loadingArchive ? (
         <div className="glass-light p-12 rounded-2xl border border-zinc-200/60 shadow-sm text-center bg-white/60 flex flex-col justify-center items-center">
           <div className="w-5 h-5 border-2 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
-          <span className="text-[10px] text-zinc-400 mt-3">Loading archive database...</span>
+          <span className="text-xs text-zinc-500 mt-3">Loading archive database...</span>
         </div>
       ) : activeList.length === 0 ? (
         <div className="glass-light p-12 rounded-2xl border border-zinc-200/60 shadow-sm text-center space-y-3 bg-white/60">
@@ -208,7 +208,7 @@ export default function SavedReports({ onSelectReport, onClose }: SavedReportsPr
           <h3 className="text-sm font-semibold text-zinc-850">
             {activeTab === 'history' ? 'No Search History' : 'No Starred Favorites'}
           </h3>
-          <p className="text-xs text-zinc-450 max-w-xs mx-auto font-light leading-relaxed">
+          <p className="text-sm text-zinc-750 max-w-xs mx-auto font-normal leading-relaxed">
             {activeTab === 'history' 
               ? 'Generate a teardown report first to log your competitive research searches here.' 
               : 'Star reports inside the dashboard view to display them in your quick favorites list.'}
@@ -235,31 +235,31 @@ export default function SavedReports({ onSelectReport, onClose }: SavedReportsPr
                         handleRemoveFavorite(idx, e);
                       }
                     }}
-                    className="p-1 rounded bg-zinc-50 hover:bg-rose-50 text-zinc-400 hover:text-rose-600 border border-zinc-200/50 hover:border-rose-100 transition shadow-sm"
+                    className="p-1 rounded bg-zinc-50 hover:bg-rose-50 text-zinc-500 hover:text-rose-600 border border-zinc-200/50 hover:border-rose-100 transition shadow-sm"
                     title={activeTab === 'history' ? "Delete from history" : "Remove from favorites"}
                   >
                     <Trash2 size={12} />
                   </button>
                 </div>
 
-                <p className="text-[10px] text-zinc-450 font-light mt-1 truncate">
+                <p className="text-sm text-zinc-750 font-normal mt-1 truncate">
                   Goal: <span className="text-zinc-600 font-normal">{entry.objective || 'General capability assessment'}</span>
                 </p>
                 
-                <p className="text-[11px] text-zinc-500 font-light line-clamp-2 mt-2 leading-relaxed">
+                <p className="text-xs text-zinc-500 font-normal line-clamp-2 mt-2 leading-relaxed">
                   Configured for {entry.persona} segment.
                 </p>
               </div>
 
               {/* Bottom detail meta */}
-              <div className="flex justify-between items-center text-[10px] text-zinc-400 pt-3 border-t border-zinc-100 font-light">
+              <div className="flex justify-between items-center text-xs text-zinc-500 pt-3 border-t border-zinc-100 font-normal">
                 <div className="flex items-center gap-3">
                   <span className="flex items-center gap-1">
-                    <Calendar size={11} className="text-zinc-400" />
+                    <Calendar size={11} className="text-zinc-500" />
                     {new Date(entry.timestamp).toLocaleDateString()}
                   </span>
                   <span className="flex items-center gap-1">
-                    <User size={11} className="text-zinc-400" />
+                    <User size={11} className="text-zinc-500" />
                     {entry.persona.split(' ')[0]}
                   </span>
                 </div>

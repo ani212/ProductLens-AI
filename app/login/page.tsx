@@ -81,13 +81,13 @@ export default function LoginPage() {
               <Bot size={16} />
             </div>
             <span className="font-semibold text-base tracking-tight text-zinc-900">
-              ProductLens<span className="text-purple-650 font-light">AI</span>
+              ProductLens<span className="text-purple-650 font-normal">AI</span>
             </span>
           </div>
           <h2 className="text-xl font-bold text-zinc-900 tracking-tight">
             {isRegister ? 'Create your PM account' : 'Access the intelligence suite'}
           </h2>
-          <p className="text-[11px] text-zinc-400 font-light">
+          <p className="text-xs text-zinc-500 font-normal">
             Authenticate to track competitive teardown histories & star favorites.
           </p>
         </div>
@@ -135,7 +135,7 @@ export default function LoginPage() {
             
             {/* Input field identifier */}
             <div className="space-y-1.5">
-              <label htmlFor="identifier" className="text-[9px] font-bold uppercase tracking-wider text-zinc-450 block">
+              <label htmlFor="identifier" className="text-xs font-bold uppercase tracking-wider text-zinc-650 block">
                 {loginMethod === 'email' ? 'Email Address' : 'Phone Number'}
               </label>
               <div className="relative">
@@ -148,7 +148,7 @@ export default function LoginPage() {
                   onChange={(e) => setIdentifier(e.target.value)}
                   className="w-full pl-9 pr-4 py-2.5 bg-white border border-zinc-200 rounded-xl text-zinc-950 placeholder-zinc-400 text-xs focus:outline-none focus:border-zinc-950 transition shadow-sm"
                 />
-                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400">
+                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500">
                   {loginMethod === 'email' ? <Mail size={13} /> : <Phone size={13} />}
                 </div>
               </div>
@@ -156,7 +156,7 @@ export default function LoginPage() {
 
             {/* Input password */}
             <div className="space-y-1.5">
-              <label htmlFor="password" className="text-[9px] font-bold uppercase tracking-wider text-zinc-450 block">
+              <label htmlFor="password" className="text-xs font-bold uppercase tracking-wider text-zinc-650 block">
                 Password
               </label>
               <div className="relative">
@@ -169,13 +169,13 @@ export default function LoginPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full pl-9 pr-10 py-2.5 bg-white border border-zinc-200 rounded-xl text-zinc-950 placeholder-zinc-400 text-xs focus:outline-none focus:border-zinc-950 transition shadow-sm"
                 />
-                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400">
+                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500">
                   <Lock size={13} />
                 </div>
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600 focus:outline-none"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-600 focus:outline-none"
                 >
                   {showPassword ? <EyeOff size={13} /> : <Eye size={13} />}
                 </button>
@@ -184,7 +184,7 @@ export default function LoginPage() {
 
             {/* Validation & Auth errors */}
             {(validationError || error) && (
-              <div className="p-3 rounded-xl bg-rose-50 border border-rose-100 text-[10px] text-rose-700 leading-normal font-medium">
+              <div className="p-3 rounded-xl bg-rose-50 border border-rose-100 text-xs text-rose-700 leading-normal font-medium">
                 {validationError || error}
               </div>
             )}
@@ -200,7 +200,7 @@ export default function LoginPage() {
           </form>
 
           {/* Toggle register */}
-          <div className="mt-5 text-center text-[10px] text-zinc-450">
+          <div className="mt-5 text-center text-sm text-zinc-750">
             <span>{isRegister ? 'Already have an account? ' : 'First time using the platform? '}</span>
             <button
               onClick={() => {
@@ -217,8 +217,8 @@ export default function LoginPage() {
         </div>
 
         {/* Database indicator */}
-        <div className="flex justify-center items-center gap-1.5 text-[9px] text-zinc-450 font-light">
-          <ShieldCheck size={12} className={sheetsConnected ? 'text-emerald-600' : 'text-zinc-400'} />
+        <div className="flex justify-center items-center gap-1.5 text-sm text-zinc-750 font-normal">
+          <ShieldCheck size={12} className={sheetsConnected ? 'text-emerald-600' : 'text-zinc-500'} />
           <span>
             Database Sync: {sheetsConnected ? 'Active (Connected to Google Sheets)' : 'Sandbox Mode (Offline Caching)'}
           </span>

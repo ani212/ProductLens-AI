@@ -132,7 +132,7 @@ export default function ResearchLoader({ products }: ResearchLoaderProps) {
           <h2 className="text-xl font-bold text-zinc-900 tracking-tight">
             Analyzing {products}...
           </h2>
-          <p className="text-xs text-zinc-550 max-w-sm mx-auto font-light leading-relaxed">
+          <p className="text-xs text-zinc-550 max-w-sm mx-auto font-normal leading-relaxed">
             Our autonomous product intelligence agents are parsing pricing grids, normalizing database taxonomies, and cross-checking reviews.
           </p>
         </div>
@@ -148,7 +148,7 @@ export default function ResearchLoader({ products }: ResearchLoaderProps) {
         <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
           {/* Agent status column */}
           <div className="md:col-span-2 space-y-2">
-            <h3 className="text-[10px] font-bold text-zinc-450 uppercase tracking-widest mb-3">
+            <h3 className="text-xs font-bold text-zinc-650 uppercase tracking-widest mb-3">
               Agent Callstack
             </h3>
             {AGENT_STEPS.map((step, idx) => {
@@ -162,7 +162,7 @@ export default function ResearchLoader({ products }: ResearchLoaderProps) {
                     isActive
                       ? 'bg-purple-50 border-purple-200 text-zinc-900 font-semibold'
                       : isCompleted
-                      ? 'bg-zinc-100/50 border-transparent text-zinc-400'
+                      ? 'bg-zinc-100/50 border-transparent text-zinc-500'
                       : 'bg-transparent border-transparent text-zinc-300'
                   }`}
                 >
@@ -173,7 +173,7 @@ export default function ResearchLoader({ products }: ResearchLoaderProps) {
                   ) : (
                     <CircleDot size={14} className="text-zinc-200 shrink-0" />
                   )}
-                  <span className="text-[11px] truncate">{step.agent}</span>
+                  <span className="text-xs truncate">{step.agent}</span>
                 </div>
               );
             })}
@@ -181,7 +181,7 @@ export default function ResearchLoader({ products }: ResearchLoaderProps) {
 
           {/* Frosted Light Console Output */}
           <div className="md:col-span-3 flex flex-col h-[320px] bg-white border border-zinc-200 rounded-2xl overflow-hidden font-mono shadow-md">
-            <div className="flex items-center justify-between px-4 py-2 border-b border-zinc-100 bg-zinc-50/50 text-zinc-400 text-[10px]">
+            <div className="flex items-center justify-between px-4 py-2 border-b border-zinc-100 bg-zinc-50/50 text-zinc-500 text-xs">
               <div className="flex items-center gap-1.5 font-semibold uppercase tracking-wider">
                 <Terminal size={11} className="text-zinc-500" />
                 <span>workspace_pipeline.log</span>
@@ -189,7 +189,7 @@ export default function ResearchLoader({ products }: ResearchLoaderProps) {
               <span className="flex h-1.5 w-1.5 rounded-full bg-purple-600 animate-ping"></span>
             </div>
             
-            <div className="flex-1 p-4 overflow-y-auto text-[10px] space-y-2 text-zinc-700 scrollbar font-medium">
+            <div className="flex-1 p-4 overflow-y-auto text-xs space-y-2 text-zinc-700 scrollbar font-medium">
               {terminalLogs.map((log, i) => {
                 let colorClass = 'text-zinc-500';
                 if (log.startsWith('[SYSTEM]')) colorClass = 'text-indigo-600 font-bold';
@@ -205,7 +205,7 @@ export default function ResearchLoader({ products }: ResearchLoaderProps) {
               })}
               
               {/* Blinking cursor */}
-              <div className="flex items-center gap-1 text-[10px] text-zinc-400 font-light">
+              <div className="flex items-center gap-1 text-xs text-zinc-500 font-normal">
                 <span>&gt; pipeline_daemon</span>
                 <span className="inline-block w-1 h-3 bg-zinc-400 animate-pulse"></span>
               </div>

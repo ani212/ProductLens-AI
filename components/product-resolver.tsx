@@ -20,7 +20,7 @@ export default function ProductResolver({ products, onConfirm, onCancel, isLoadi
           <h2 className="text-2xl font-bold tracking-tight text-zinc-900">
             Confirm Product Profiles
           </h2>
-          <p className="text-zinc-555 max-w-xl mx-auto text-xs font-light leading-relaxed">
+          <p className="text-zinc-555 max-w-xl mx-auto text-xs font-normal leading-relaxed">
             Verify the resolved entities and domains below are the intended products before starting the AI competitive research scans.
           </p>
         </div>
@@ -58,31 +58,31 @@ export default function ProductResolver({ products, onConfirm, onCancel, isLoadi
                     </div>
                     <div className="min-w-0">
                       <h3 className="text-sm font-semibold text-zinc-900 truncate">{product.name}</h3>
-                      <p className="text-[10px] text-purple-650 font-bold uppercase tracking-wider mt-0.5 truncate">{product.category}</p>
+                      <p className="text-xs text-purple-650 font-bold uppercase tracking-wider mt-0.5 truncate">{product.category}</p>
                     </div>
                   </div>
 
                   {/* Description */}
-                  <p className="text-[11px] text-zinc-500 font-light mt-4 line-clamp-3 leading-relaxed">
+                  <p className="text-xs text-zinc-500 font-normal mt-4 line-clamp-3 leading-relaxed">
                     {product.description}
                   </p>
                 </div>
 
                 {/* Bottom link metadata */}
-                <div className="mt-4 pt-3 border-t border-zinc-100 flex flex-col gap-1 text-[10px] text-zinc-400">
+                <div className="mt-4 pt-3 border-t border-zinc-100 flex flex-col gap-1 text-xs text-zinc-500">
                   <div className="flex items-center gap-1.5 truncate">
-                    <Globe size={11} className="text-zinc-400 shrink-0" />
+                    <Globe size={11} className="text-zinc-500 shrink-0" />
                     <a
                       href={product.website}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="hover:underline hover:text-purple-600 truncate font-light"
+                      className="hover:underline hover:text-purple-600 truncate font-normal"
                     >
                       {product.website.replace('https://', '')}
                     </a>
                   </div>
                   <div className="truncate">
-                    <span className="font-semibold text-zinc-400">Org:</span> {product.companyName}
+                    <span className="font-semibold text-zinc-500">Org:</span> {product.companyName}
                   </div>
                 </div>
 
