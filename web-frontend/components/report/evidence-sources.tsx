@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { TeardownReport } from '@/lib/mock-data';
-import { Link2, ExternalLink, ShieldCheck, CheckCircle2 } from 'lucide-react';
+import { ExternalLink } from 'lucide-react';
 
 interface EvidenceSourcesProps {
   report: TeardownReport;
@@ -13,30 +13,30 @@ export default function EvidenceSources({ report }: EvidenceSourcesProps) {
   if (!sources || sources.length === 0) return null;
 
   return (
-    <section id="sources" className="scroll-mt-32 space-y-6">
+    <section id="sources" className="scroll-mt-32 space-y-6 w-full">
       <div className="flex items-center gap-2">
-        <div className="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-xs">
+        <div className="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-xs shrink-0">
           14
         </div>
         <h2 className="text-xl font-extrabold text-zinc-950 tracking-tight">Evidence & Grounding Source Citations</h2>
       </div>
 
-      <div className="bg-white border border-zinc-200 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
+      <div className="bg-white border border-zinc-200 rounded-3xl p-4 sm:p-8 shadow-sm space-y-4 sm:space-y-6 w-full">
         <div className="space-y-1">
-          <p className="text-xs text-zinc-600 font-medium">
+          <p className="text-xs text-zinc-600 font-medium leading-relaxed">
             Every insight in this report is linked to extracted web sources, official documentation, pricing pages, and customer reviews.
           </p>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse text-xs min-w-[700px]">
+        <div className="overflow-x-auto scrollbar-none w-full">
+          <table className="w-full text-left border-collapse text-xs min-w-[650px] sm:min-w-[700px]">
             <thead>
               <tr className="border-b border-zinc-200 text-zinc-500 bg-zinc-50/50 font-bold uppercase tracking-wider text-[11px]">
-                <th className="p-3.5 rounded-tl-2xl">Source Channel</th>
-                <th className="p-3.5">Classification</th>
-                <th className="p-3.5">Evidence Snippet</th>
-                <th className="p-3.5 text-center">Confidence</th>
-                <th className="p-3.5 text-right rounded-tr-2xl">Verification</th>
+                <th className="p-3 sm:p-3.5 rounded-tl-2xl">Source Channel</th>
+                <th className="p-3 sm:p-3.5">Classification</th>
+                <th className="p-3 sm:p-3.5">Evidence Snippet</th>
+                <th className="p-3 sm:p-3.5 text-center">Confidence</th>
+                <th className="p-3 sm:p-3.5 text-right rounded-tr-2xl">Verification</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-zinc-100 font-medium text-zinc-700">
@@ -49,36 +49,36 @@ export default function EvidenceSources({ report }: EvidenceSourcesProps) {
 
                 return (
                   <tr key={idx} className="hover:bg-zinc-50/50 transition">
-                    <td className="p-3.5 font-bold text-zinc-900 max-w-xs truncate">
+                    <td className="p-3 sm:p-3.5 font-bold text-zinc-900 max-w-xs truncate">
                       {src.title}
                       <span className="text-[10px] text-zinc-400 font-normal block">
                         Checked {new Date(src.retrievedAt).toLocaleDateString()}
                       </span>
                     </td>
 
-                    <td className="p-3.5 whitespace-nowrap">
+                    <td className="p-3 sm:p-3.5 whitespace-nowrap">
                       <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${badgeClass}`}>
                         {src.classification}
                       </span>
                     </td>
 
-                    <td className="p-3.5 text-zinc-600 font-normal italic max-w-md truncate">
+                    <td className="p-3 sm:p-3.5 text-zinc-600 font-normal italic max-w-md truncate">
                       &ldquo;{src.snippet}&rdquo;
                     </td>
 
-                    <td className="p-3.5 text-center font-bold">
+                    <td className="p-3 sm:p-3.5 text-center font-bold">
                       <span className={src.confidence === 'High' ? 'text-emerald-600' : 'text-amber-600'}>
                         {src.confidence}
                       </span>
                     </td>
 
-                    <td className="p-3.5 text-right whitespace-nowrap">
+                    <td className="p-3 sm:p-3.5 text-right whitespace-nowrap">
                       {src.url ? (
                         <a
                           href={src.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-white hover:bg-zinc-50 border border-zinc-200 text-zinc-700 hover:text-indigo-600 font-semibold transition text-[11px] shadow-sm"
+                          className="inline-flex items-center gap-1 px-3 py-1.5 min-h-[44px] sm:min-h-0 rounded-xl bg-white hover:bg-zinc-50 border border-zinc-200 text-zinc-700 hover:text-indigo-600 font-semibold transition text-[11px] shadow-sm"
                         >
                           <span>Verify Link</span>
                           <ExternalLink size={11} />

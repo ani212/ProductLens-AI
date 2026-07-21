@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { TeardownReport } from '@/lib/mock-data';
-import { Layers, Check, X, Minus, Sparkles } from 'lucide-react';
+import { Check, X, Minus, Sparkles, ArrowRight } from 'lucide-react';
 
 interface FeatureComparisonProps {
   report: TeardownReport;
@@ -13,31 +13,39 @@ export default function FeatureComparison({ report }: FeatureComparisonProps) {
   if (!features || features.length === 0) return null;
 
   return (
-    <section id="features" className="scroll-mt-32 space-y-6">
-      <div className="flex items-center gap-2">
-        <div className="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-xs">
-          05
+    <section id="features" className="scroll-mt-32 space-y-6 w-full">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-xs shrink-0">
+            05
+          </div>
+          <h2 className="text-xl font-extrabold text-zinc-950 tracking-tight">Feature Matrix & Capability Gaps</h2>
         </div>
-        <h2 className="text-xl font-extrabold text-zinc-950 tracking-tight">Feature Matrix & Capability Gaps</h2>
+
+        {/* Mobile Swipe Hint */}
+        <span className="sm:hidden text-[10px] text-zinc-400 font-bold uppercase tracking-wider flex items-center gap-1">
+          Swipe table <ArrowRight size={10} />
+        </span>
       </div>
 
-      <div className="bg-white border border-zinc-200 rounded-3xl overflow-hidden shadow-sm">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse min-w-[650px]">
+      {/* Desktop Table & Mobile Horizontal Scroll Container */}
+      <div className="bg-white border border-zinc-200 rounded-3xl overflow-hidden shadow-sm w-full">
+        <div className="overflow-x-auto scrollbar-none">
+          <table className="w-full text-left border-collapse min-w-[550px] sm:min-w-[650px]">
             <thead>
               <tr className="bg-zinc-50 border-b border-zinc-200 text-xs font-bold uppercase tracking-wider text-zinc-500">
-                <th className="p-4 w-2/5">Capability & Description</th>
+                <th className="p-3.5 sm:p-4 w-2/5">Capability & Description</th>
                 {products.map(p => (
-                  <th key={p.id} className="p-4 text-center">
+                  <th key={p.id} className="p-3.5 sm:p-4 text-center">
                     <div className="flex items-center justify-center gap-1.5">
-                      <div className={`w-5 h-5 rounded flex items-center justify-center text-[10px] ${p.logoBg || 'bg-zinc-900 text-white'}`}>
+                      <div className={`w-5 h-5 rounded flex items-center justify-center text-[10px] shrink-0 ${p.logoBg || 'bg-zinc-900 text-white'}`}>
                         {p.logoText}
                       </div>
-                      <span className="text-zinc-900 font-bold">{p.name}</span>
+                      <span className="text-zinc-900 font-bold truncate max-w-[80px] sm:max-w-none">{p.name}</span>
                     </div>
                   </th>
                 ))}
-                <th className="p-4 text-center w-28">Opportunity</th>
+                <th className="p-3.5 sm:p-4 text-center w-28">Opportunity</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-zinc-100 text-xs font-medium">
@@ -45,8 +53,8 @@ export default function FeatureComparison({ report }: FeatureComparisonProps) {
                 <tr key={idx} className="hover:bg-zinc-50/50 transition">
                   
                   {/* Capability & Description */}
-                  <td className="p-4 space-y-0.5">
-                    <div className="font-bold text-zinc-900 text-sm">{row.capability}</div>
+                  <td className="p-3.5 sm:p-4 space-y-0.5">
+                    <div className="font-bold text-zinc-900 text-xs sm:text-sm">{row.capability}</div>
                     <p className="text-zinc-500 text-[11px] font-normal leading-relaxed">{row.description}</p>
                   </td>
 
@@ -68,7 +76,7 @@ export default function FeatureComparison({ report }: FeatureComparisonProps) {
                     }
 
                     return (
-                      <td key={p.id} className="p-4 text-center">
+                      <td key={p.id} className="p-3.5 sm:p-4 text-center">
                         <div className="flex flex-col items-center gap-1">
                           <div className={`w-7 h-7 rounded-full flex items-center justify-center ${style}`}>
                             {icon}
@@ -80,7 +88,7 @@ export default function FeatureComparison({ report }: FeatureComparisonProps) {
                   })}
 
                   {/* Opportunity Score */}
-                  <td className="p-4 text-center">
+                  <td className="p-3.5 sm:p-4 text-center">
                     <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
                       row.opportunityScore === 'High' ? 'bg-indigo-50 text-indigo-700 border border-indigo-200' :
                       row.opportunityScore === 'Medium' ? 'bg-zinc-100 text-zinc-700 border border-zinc-200' :

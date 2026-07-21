@@ -1,34 +1,50 @@
 @import "tailwindcss";
 
 @layer base {
-  body {
+  *, ::before, ::after {
+    box-sizing: border-box;
+  }
+
+  html, body {
+    max-width: 100vw;
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
     background-color: #fafafa;
     color: #09090b;
     font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
     -webkit-font-smoothing: antialiased;
+    touch-action: manipulation;
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-outfit), var(--font-inter), sans-serif;
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+
+  p, span, a, label {
+    overflow-wrap: break-word;
   }
 }
 
 /* Glassmorphism utility classes */
 .glass-panel {
-  background: rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(12px);
   border: 1px solid rgba(228, 228, 231, 0.8);
 }
 
 /* Print CSS */
 @media print {
-  header, nav, button, .no-print {
+  header, nav, button, .no-print, .mobile-action-bar {
     display: none !important;
   }
   
   body {
     background: white !important;
     color: black !important;
+    overflow: visible !important;
   }
 
   section {
@@ -37,11 +53,16 @@
   }
 }
 
-/* Custom scrollbar */
+/* Custom scrollbars */
 .scrollbar-none::-webkit-scrollbar {
   display: none;
 }
 .scrollbar-none {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* Prevent iOS tap highlight */
+a, button, input, select, textarea {
+  -webkit-tap-highlight-color: transparent;
 }

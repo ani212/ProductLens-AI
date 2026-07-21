@@ -16,19 +16,19 @@ export default function ResearchLoader({ products, progressUpdates, globalStage,
   const activeProducts = Object.values(progressUpdates).filter(p => p.productId !== 'all');
 
   return (
-    <div className="flex-1 flex flex-col items-center justify-center p-6 min-h-[85vh]">
-      <div className="max-w-4xl w-full mx-auto space-y-8">
+    <div className="flex-1 flex flex-col items-center justify-center p-4 sm:p-6 min-h-[80vh] w-full max-w-4xl mx-auto">
+      <div className="w-full space-y-6 sm:space-y-8">
         
         {/* Header */}
-        <div className="text-center space-y-3">
+        <div className="text-center space-y-2 sm:space-y-3 px-2">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-50 text-indigo-700 text-xs font-bold tracking-tight border border-indigo-150 shadow-sm">
-            {error ? <AlertCircle size={14} className="text-rose-500" /> : <Sparkles size={14} className="animate-pulse" />}
-            <span className={error ? "text-rose-600" : ""}>{error ? 'Research Pipeline Error' : 'Research Pipeline Active'}</span>
+            {error ? <AlertCircle size={14} className="text-rose-500 shrink-0" /> : <Sparkles size={14} className="animate-pulse text-indigo-600 shrink-0" />}
+            <span className={error ? "text-rose-600" : ""}>{error ? 'Pipeline Error' : 'Research Pipeline Active'}</span>
           </div>
-          <h2 className="text-2xl sm:text-4xl font-black tracking-tight text-zinc-950">
+          <h2 className="text-xl sm:text-3xl lg:text-4xl font-black tracking-tight text-zinc-950 break-words">
             {globalStage || 'Initializing analysis...'}
           </h2>
-          <p className="text-zinc-500 text-xs sm:text-sm max-w-xl mx-auto">
+          <p className="text-zinc-500 text-xs sm:text-sm max-w-xl mx-auto leading-relaxed">
             {error
               ? 'An error occurred while running the competitive intelligence pipeline.'
               : 'Gathering official documentation, pricing tiers, customer reviews (G2/Capterra), and community feedback (Reddit).'}
@@ -42,12 +42,12 @@ export default function ResearchLoader({ products, progressUpdates, globalStage,
         )}
 
         {/* Product Progress Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {productList.map(productName => {
             const progress = activeProducts.find(p => p.productName.toLowerCase() === productName.toLowerCase());
 
             return (
-              <div key={productName} className="bg-white border border-zinc-200 rounded-3xl p-5 shadow-sm space-y-4">
+              <div key={productName} className="bg-white border border-zinc-200 rounded-3xl p-4 sm:p-5 shadow-sm space-y-4">
                 
                 <div className="flex justify-between items-start">
                   <h3 className="font-bold text-zinc-950 truncate pr-2 text-sm">{productName}</h3>
@@ -67,33 +67,33 @@ export default function ResearchLoader({ products, progressUpdates, globalStage,
                 {/* Status Text */}
                 <p className="text-xs font-medium text-zinc-500 truncate flex items-center gap-1.5">
                   {progress?.stage === 'Complete' ? (
-                    <CheckCircle2 size={13} className="text-emerald-500" />
+                    <CheckCircle2 size={13} className="text-emerald-500 shrink-0" />
                   ) : progress ? (
-                    <Loader2 size={13} className="animate-spin text-indigo-500" />
+                    <Loader2 size={13} className="animate-spin text-indigo-500 shrink-0" />
                   ) : (
-                    <CircleDashed size={13} className="text-zinc-300" />
+                    <CircleDashed size={13} className="text-zinc-300 shrink-0" />
                   )}
-                  {progress?.stage || 'Waiting to start...'}
+                  <span className="truncate">{progress?.stage || 'Waiting to start...'}</span>
                 </p>
 
                 {/* Source Statuses */}
                 {progress?.sourceStatuses && progress.sourceStatuses.length > 0 && (
-                  <div className="pt-3 border-t border-zinc-100 space-y-2">
+                  <div className="pt-3 border-t border-zinc-100 space-y-1.5">
                     {progress.sourceStatuses.map((source, idx) => (
                       <div key={idx} className="flex items-center justify-between text-[11px]">
-                        <span className="text-zinc-600 flex items-center gap-1.5 font-medium">
+                        <span className="text-zinc-600 flex items-center gap-1.5 font-medium truncate pr-2">
                           {source.status === 'success' ? (
-                            <CheckCircle2 size={11} className="text-emerald-500" />
+                            <CheckCircle2 size={11} className="text-emerald-500 shrink-0" />
                           ) : source.status === 'unavailable' ? (
-                            <CircleDashed size={11} className="text-rose-400" />
+                            <CircleDashed size={11} className="text-rose-400 shrink-0" />
                           ) : source.status === 'pending' ? (
-                            <Loader2 size={11} className="animate-spin text-zinc-400" />
+                            <Loader2 size={11} className="animate-spin text-zinc-400 shrink-0" />
                           ) : (
-                            <CircleDashed size={11} className="text-amber-500" />
+                            <CircleDashed size={11} className="text-amber-500 shrink-0" />
                           )}
-                          {source.name}
+                          <span className="truncate">{source.name}</span>
                         </span>
-                        <span className="text-zinc-400 font-medium">
+                        <span className="text-zinc-400 font-medium shrink-0">
                           {source.status === 'success' && source.itemsCollected > 0 ? (
                             `${source.itemsCollected} items`
                           ) : source.status === 'unavailable' ? (
@@ -112,20 +112,19 @@ export default function ResearchLoader({ products, progressUpdates, globalStage,
         </div>
 
         {/* Live Terminal Console */}
-        <div className="bg-zinc-950 text-zinc-400 font-mono text-xs rounded-2xl p-4 shadow-inner min-h-[120px] max-h-[200px] overflow-y-auto space-y-2 border border-zinc-800">
+        <div className="bg-zinc-950 text-zinc-400 font-mono text-xs rounded-2xl p-4 shadow-inner min-h-[100px] max-h-[160px] overflow-y-auto space-y-2 border border-zinc-800">
           <div className="flex items-center gap-2 text-zinc-500 mb-2 pb-2 border-b border-zinc-800 text-[11px]">
-            <Terminal size={12} />
+            <Terminal size={12} className="shrink-0" />
             <span>Research Execution Console</span>
           </div>
           {activeProducts.map((p, i) => (
-             <div key={`log-${i}`} className="animate-in fade-in slide-in-from-bottom-1">
+             <div key={`log-${i}`} className="animate-in fade-in slide-in-from-bottom-1 text-[11px] leading-relaxed break-words">
                <span className="text-indigo-400">[{new Date().toLocaleTimeString()}]</span> {p.productName}: {p.stage}...
-               {p.sourceStatuses && ` (${p.sourceStatuses.filter(s => s.status === 'success').length}/${p.sourceStatuses.length} sources gathered)`}
              </div>
           ))}
           {globalStage === 'Generating Analysis' && (
-            <div className="animate-in fade-in slide-in-from-bottom-1 text-emerald-400">
-               [{new Date().toLocaleTimeString()}] Analysis Engine: Synthesizing multi-source evidence into 15 PM frameworks...
+            <div className="animate-in fade-in slide-in-from-bottom-1 text-emerald-400 text-[11px] leading-relaxed">
+               [{new Date().toLocaleTimeString()}] Analysis Engine: Synthesizing evidence into 15 PM frameworks...
             </div>
           )}
         </div>
