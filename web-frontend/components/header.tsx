@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Sparkles, Layers, Search, Bookmark } from 'lucide-react';
+import { Sparkles, Layers, Search, Bookmark, Github } from 'lucide-react';
 
 export default function Header() {
   return (
@@ -24,7 +24,7 @@ export default function Header() {
           </span>
         </div>
 
-        {/* Navigation links */}
+        {/* Navigation links & GitHub profile credit */}
         <nav className="flex items-center gap-4 text-xs font-semibold text-zinc-600">
           <Link href="/" className="hover:text-indigo-600 flex items-center gap-1.5 transition">
             <Search size={14} />
@@ -34,6 +34,15 @@ export default function Header() {
             <Bookmark size={14} />
             Saved Reports
           </Link>
+          <a
+            href="https://github.com/ani212"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-bold transition shadow-sm"
+          >
+            <Github size={14} />
+            <span>@ani212</span>
+          </a>
         </nav>
 
       </div>

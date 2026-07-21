@@ -223,6 +223,17 @@ export default function LandingPage({ onStartAnalysis, onViewSample }: LandingPa
             Plots an interactive 2x2 opportunity map (Quick Wins, Strategic Bets) and generates concrete PM roadmap recommendations.
           </p>
         </div>
+      {/* Footer Credit */}
+      <div className="pt-6 text-center text-xs text-zinc-400 font-medium">
+        Engineered with Gemini Grounded Search AI by{' '}
+        <a
+          href="https://github.com/ani212"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-zinc-700 font-bold hover:text-indigo-600 underline underline-offset-2 transition"
+        >
+          @ani212
+        </a>
       </div>
 
     </div>
